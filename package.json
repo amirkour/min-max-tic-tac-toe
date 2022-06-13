@@ -1,0 +1,22 @@
+{
+  "name": "min-max-tic-tac-toe",
+  "version": "1.0.0",
+  "description": "A javascript, min/max AI for playing tic tac toe",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amirkour/min-max-tic-tac-toe.git"
+  },
+  "author": "Amir Kouretchian",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amirkour/min-max-tic-tac-toe/issues"
+  },
+  "homepage": "https://github.com/amirkour/min-max-tic-tac-toe#readme",
+  "devDependencies": {
+    "typescript": "^4.7.3"
+  }
+}
