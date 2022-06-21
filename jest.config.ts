@@ -1,9 +1,14 @@
+// for info on importing jest type metadata (which gives vscode
+// jest type hints) see:
+// https://www.npmjs.com/package/@jest/types
+import { Config } from "@jest/types";
+
 /*
  * For a detailed explanation regarding each configuration property and type check, visit:
  * https://jestjs.io/docs/configuration
  */
 
-const jestConfig = {
+const jestConfig: Config.InitialOptions = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 

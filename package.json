@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "jest",
+    "testw": "jest --watch",
     "dev": "nodemon playground.ts"
   },
   "repository": {
@@ -19,6 +20,7 @@
   },
   "homepage": "https://github.com/amirkour/min-max-tic-tac-toe#readme",
   "devDependencies": {
+    "@types/jest": "^28.1.2",
     "jest": "^28.1.1",
     "nodemon": "^2.0.16",
     "ts-node": "^10.8.1",
