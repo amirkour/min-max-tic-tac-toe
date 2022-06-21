@@ -1,1 +1,3 @@
-console.log(`hi world!?`)
+import Game from "./Game.js";
+
+export { Game };
