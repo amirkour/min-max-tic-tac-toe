@@ -54,4 +54,20 @@ export default class Game {
   gameOver(): boolean {
     return this.winner != null;
   }
+
+  makeMove(index: number, player: string): undefined {
+    if (this.winner) {
+      let error = `This game is over!`;
+      error +=
+        this.winner === DRAW ? ` it was a draw!` : ` ${this.winner} won!`;
+
+      throw error;
+    }
+    if (index < 0 || index > this.board.length)
+      throw `Cannot make a move on space ${index} - invalid index`;
+    if (player !== PLAYER_O && player !== PLAYER_X)
+      throw `Cannot make a move for player ${player} - invalid player`;
+
+    throw "nope";
+  }
 }
