@@ -1,4 +1,8 @@
-import RandomNextMoveGetter from "../../strategies/RandomNextMoveGetter";
+import RandomNextMoveGetter, {
+  MIN,
+  MAX,
+} from "../../strategies/RandomNextMoveGetter";
+
 describe("RandomNextMoveGetter", () => {
   it("returns random whole numbers", () => {
     const nmg = new RandomNextMoveGetter();
@@ -15,5 +19,26 @@ describe("RandomNextMoveGetter", () => {
     expect(first).not.toBe(third);
 
     expect(second).not.toBe(third);
+  });
+
+  it("inits min and max to defaults", () => {
+    const nmg = new RandomNextMoveGetter();
+    expect(nmg.min).toBe(MIN);
+    expect(nmg.max).toBe(MAX);
+  });
+
+  it("obeys min and max restrictions", () => {
+    // these are just arbitrary test numbers to validate
+    // that the RNG stays within the bounds specificed
+    const min = 0;
+    const max = 12;
+    const nmg = new RandomNextMoveGetter({ min, max });
+
+    const arbitrarilyLarge = 100;
+    for (let i = 0; i < arbitrarilyLarge; i++) {
+      const next = nmg.getNextMove();
+      expect(next).toBeGreaterThanOrEqual(min);
+      expect(next).toBeLessThanOrEqual(max);
+    }
   });
 });
