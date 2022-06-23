@@ -34,7 +34,8 @@ export default class Game {
   }
 
   // first player will always be X
-  whosTurn(): string {
+  whosTurn(): string | null {
+    if (this.winner) return null;
     let xCount = 0;
     let yCount = 0;
     for (let i = 0; i < this.board.length; i++) {

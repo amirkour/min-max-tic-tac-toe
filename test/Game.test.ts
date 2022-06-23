@@ -47,6 +47,15 @@ describe("Game", () => {
         expect(game.whosTurn()).toBe(PLAYER_O);
       });
     });
+
+    describe("when the game is over", () => {
+      it("returns null", () => {
+        const game = new Game(new RandomNextMoveGetter({ min: 0, max: 8 }));
+        game.winner = "anything - just dont let it be null";
+        expect(game.gameOver()).toBe(true);
+        expect(game.whosTurn()).toBeNull();
+      });
+    });
   });
   describe("gameOver", () => {
     it("is false if a winner isnt set", () => {
