@@ -113,6 +113,8 @@ describe("Game", () => {
       }).toThrowError(/invalid/gi);
     });
     it("barfs if you try to move for the wrong player", () => {
+      // TODO - refactor - make whosTurn a property and have it set
+      // TODO - correctly by makeMove, and update tests, etc
       throw "todo";
     });
     it("sets the winner", () => {
