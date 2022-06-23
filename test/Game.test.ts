@@ -1,5 +1,9 @@
+import { getTestGame } from "./utils";
+
 describe("Game", () => {
-  it("does stuff", () => {
-    expect(1).toBe(1);
+  describe("movesMade", () => {
+    it("inits to 0", () => {
+      expect(getTestGame().movesMade).toBe(0);
+    });
   });
 });
