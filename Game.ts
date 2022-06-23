@@ -29,4 +29,16 @@ export default class Game {
 
     return next;
   }
+
+  // first player will always be X
+  whosTurn(): string {
+    let xCount = 0;
+    let yCount = 0;
+    for (let i = 0; i < this.board.length; i++) {
+      if (this.board[i] === PLAYER_O) yCount++;
+      else if (this.board[i] === PLAYER_X) xCount++;
+    }
+
+    return xCount <= yCount ? PLAYER_X : PLAYER_O;
+  }
 }

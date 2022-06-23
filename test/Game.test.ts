@@ -1,4 +1,4 @@
-import Game from "../Game";
+import Game, { PLAYER_X, PLAYER_O } from "../Game";
 import RandomNextMoveGetter from "../strategies/RandomNextMoveGetter";
 
 describe("Game", () => {
@@ -23,6 +23,28 @@ describe("Game", () => {
           const nextMove = game.getNextMove();
           expect(game.board[nextMove]).toBeFalsy();
         }
+      });
+    });
+  });
+
+  describe("whosTurn", () => {
+    describe("when its Xs turn", () => {
+      it("reports next players turn correctly", () => {
+        const game = new Game(new RandomNextMoveGetter({ min: 0, max: 8 }));
+
+        // first player is always x
+        expect(game.whosTurn()).toBe(PLAYER_X);
+
+        game.board[0] = PLAYER_O;
+        expect(game.whosTurn()).toBe(PLAYER_X);
+      });
+    });
+
+    describe("when its Os turn", () => {
+      it("reports next players turn correctly", () => {
+        const game = new Game(new RandomNextMoveGetter({ min: 0, max: 8 }));
+        game.board[0] = PLAYER_X;
+        expect(game.whosTurn()).toBe(PLAYER_O);
       });
     });
   });
