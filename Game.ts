@@ -5,15 +5,16 @@ import INextMoveGetter from "./strategies/INextMoveGetter";
 // before throwing an exception and giving up
 export const MAX_TIMES_TO_GENERATE_MOVE = 25;
 
+export const PLAYER_X = `x`;
+export const PLAYER_O = `o`;
+
 export default class Game {
   nextMoveGetter: INextMoveGetter;
-  movesMade: number;
   boardSize: number = 9; // default to 9 for now ... could be configurable later
   board: string[];
 
   constructor(nmg: INextMoveGetter) {
     this.nextMoveGetter = nmg;
-    this.movesMade = 0;
     this.board = new Array(this.boardSize);
   }
 
