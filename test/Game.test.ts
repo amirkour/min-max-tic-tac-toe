@@ -48,4 +48,16 @@ describe("Game", () => {
       });
     });
   });
+  describe("gameOver", () => {
+    it("is false if a winner isnt set", () => {
+      const game = new Game(new RandomNextMoveGetter({ min: 0, max: 8 }));
+      expect(game.gameOver()).toBe(false);
+      expect(game.winner).toBeFalsy();
+    });
+    it("is true if a winner is set", () => {
+      const game = new Game(new RandomNextMoveGetter({ min: 0, max: 8 }));
+      game.winner = "whatever - just dont let it be null";
+      expect(game.gameOver()).toBe(true);
+    });
+  });
 });

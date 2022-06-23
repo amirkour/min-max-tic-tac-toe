@@ -7,15 +7,18 @@ export const MAX_TIMES_TO_GENERATE_MOVE = 25;
 
 export const PLAYER_X = `x`;
 export const PLAYER_O = `o`;
+export const DRAW = `draw`;
 
 export default class Game {
   nextMoveGetter: INextMoveGetter;
   boardSize: number = 9; // default to 9 for now ... could be configurable later
   board: string[];
+  winner: string | null;
 
   constructor(nmg: INextMoveGetter) {
     this.nextMoveGetter = nmg;
     this.board = new Array(this.boardSize);
+    this.winner = null;
   }
 
   getNextMove(): number {
@@ -40,5 +43,9 @@ export default class Game {
     }
 
     return xCount <= yCount ? PLAYER_X : PLAYER_O;
+  }
+
+  gameOver(): boolean {
+    return this.winner != null;
   }
 }
