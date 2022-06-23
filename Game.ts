@@ -9,19 +9,24 @@ export const PLAYER_X = `x`;
 export const PLAYER_O = `o`;
 export const DRAW = `draw`;
 
+interface GameProps {
+  nmg: INextMoveGetter;
+}
+
 export default class Game {
   nextMoveGetter: INextMoveGetter;
   boardSize: number = 9; // default to 9 for now ... could be configurable later
   board: string[];
   winner: string | null;
 
-  constructor(nmg: INextMoveGetter) {
+  constructor({ nmg }: GameProps) {
     this.nextMoveGetter = nmg;
     this.board = new Array(this.boardSize);
     this.winner = null;
   }
 
-  getNextMove(): number {
+  getNextMove(): number | null {
+    if (this.winner) return null;
     let next = this.nextMoveGetter.getNextMove();
     let i = 0;
     for (; i < MAX_TIMES_TO_GENERATE_MOVE && this.board[next]; i++)
