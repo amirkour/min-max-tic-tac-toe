@@ -1,6 +1,6 @@
 import { assert } from "console";
 import INextMoveGetter from "strategies/INextMoveGetter";
-import Game, { PLAYER_X, PLAYER_O } from "../Game";
+import Game, { PLAYER_X, PLAYER_O, DRAW } from "../Game";
 import RandomNextMoveGetter, { MAX } from "../strategies/RandomNextMoveGetter";
 
 function getTestGame(): Game {
@@ -8,120 +8,166 @@ function getTestGame(): Game {
   return new Game({ nmg });
 }
 
+function getTestGameWithWinner(
+  winner: typeof PLAYER_O | typeof PLAYER_X
+): Game {
+  if (winner === PLAYER_X) {
+    return getTestGame()
+      .makeMove(0)
+      .makeMove(1)
+      .makeMove(3)
+      .makeMove(4)
+      .makeMove(6);
+  } else {
+    return getTestGame()
+      .makeMove(0)
+      .makeMove(1)
+      .makeMove(3)
+      .makeMove(4)
+      .makeMove(5)
+      .makeMove(7);
+  }
+}
+
+function getTestGameWithDraw(): Game {
+  return getTestGame()
+    .makeMove(0)
+    .makeMove(4)
+    .makeMove(8)
+    .makeMove(5)
+    .makeMove(3)
+    .makeMove(6)
+    .makeMove(2)
+    .makeMove(1)
+    .makeMove(7);
+}
+
 describe("Game", () => {
-  describe("board property", () => {
+  describe("getBoard()", () => {
     it("inits to falsey values of correct length", () => {
       const game = getTestGame();
-      expect(game.board.length).toBe(game.boardSize);
-      for (let i = 0; i < game.board.length; i++)
-        expect(game.board[i]).toBeFalsy();
+      const board = game.getBoard();
+      for (let i = 0; i < board.length; i++) expect(board[i]).toBeFalsy();
+    });
+
+    // i'm putting this one here cuz if the board size changes,
+    // a lot of the logic and tests are gonna be broken, so i wanna
+    // know about it
+    it("has length 9", () => {
+      expect(getTestGame().getBoard().length).toBe(9);
     });
   });
 
-  describe("getNextMove", () => {
+  describe("getNextMove()", () => {
     describe("on a non-empty board", () => {
       it("returns valid values", () => {
         const game = getTestGame();
-        game.board[0] = `hi`;
-        game.board[5] = `bye`;
-
+        game.makeMove(0).makeMove(5);
+        const board = game.getBoard();
         const arbitrarilyLarge = 100;
         for (let i = 0; i < arbitrarilyLarge; i++) {
           const nextMove = game.getNextMove();
           assert(nextMove != null);
-          if (nextMove != null) expect(game.board[nextMove]).toBeFalsy();
+          if (nextMove != null) expect(board[nextMove]).toBeFalsy();
         }
       });
     });
-    describe("for a game thats over", () => {
+    describe("for a game with a winner", () => {
       it("returns null", () => {
-        const game = getTestGame();
-        game.winner = "anything - just dont let it be null";
-        expect(game.gameOver()).toBe(true);
-        expect(game.getNextMove()).toBeNull();
+        expect(getTestGameWithWinner(PLAYER_X).getNextMove()).toBeNull();
+        expect(getTestGameWithWinner(PLAYER_O).getNextMove()).toBeNull();
       });
     });
-  });
-
-  describe("whosTurn", () => {
-    describe("when its Xs turn", () => {
-      it("reports next players turn correctly", () => {
-        const game = getTestGame();
-
-        // first player is always x
-        expect(game.whosTurn()).toBe(PLAYER_X);
-
-        game.board[0] = PLAYER_O;
-        expect(game.whosTurn()).toBe(PLAYER_X);
-      });
-    });
-
-    describe("when its Os turn", () => {
-      it("reports next players turn correctly", () => {
-        const game = getTestGame();
-        game.board[0] = PLAYER_X;
-        expect(game.whosTurn()).toBe(PLAYER_O);
-      });
-    });
-
-    describe("when the game is over", () => {
+    describe("for a game w/ a tie", () => {
       it("returns null", () => {
-        const game = getTestGame();
-        game.winner = "anything - just dont let it be null";
-        expect(game.gameOver()).toBe(true);
-        expect(game.whosTurn()).toBeNull();
+        expect(getTestGameWithDraw().getNextMove()).toBeNull();
       });
     });
   });
-  describe("gameOver", () => {
-    it("is false if a winner isnt set", () => {
+
+  describe("whosTurn()", () => {
+    it("reports next players turn correctly", () => {
       const game = getTestGame();
-      expect(game.gameOver()).toBe(false);
-      expect(game.winner).toBeFalsy();
+
+      // first player is always x
+      expect(game.whosTurn()).toBe(PLAYER_X);
+
+      game.makeMove(0);
+      expect(game.whosTurn()).toBe(PLAYER_O);
     });
-    it("is true if a winner is set", () => {
-      const game = getTestGame();
-      game.winner = "whatever - just dont let it be null";
-      expect(game.gameOver()).toBe(true);
+
+    describe("when the game has a winner", () => {
+      it("returns null", () => {
+        expect(getTestGameWithWinner(PLAYER_O).whosTurn()).toBeNull();
+        expect(getTestGameWithWinner(PLAYER_X).whosTurn()).toBeNull();
+      });
+    });
+    describe("when the game has a draw", () => {
+      it("returns null", () => {
+        expect(getTestGameWithDraw().whosTurn()).toBeNull();
+      });
     });
   });
-  describe("makeMove", () => {
-    describe("when the game is over", () => {
-      it("throws", () => {
-        const game = getTestGame();
-        game.winner = "anything - just dont let it be null";
-        expect(game.gameOver()).toBeTruthy();
-        expect(() => {
-          game.makeMove(0, PLAYER_X);
-        }).toThrowError(/game is over/gi);
-      });
+
+  describe("gameOver()", () => {
+    it("is false at init time", () => {
+      expect(getTestGame().gameOver()).toBe(false);
+    });
+    it("is true if there's a winner", () => {
+      expect(getTestGameWithWinner(PLAYER_X).gameOver()).toBe(true);
+      expect(getTestGameWithWinner(PLAYER_O).gameOver()).toBe(true);
+    });
+    it("is true if there's a draw", () => {
+      expect(getTestGameWithDraw().gameOver()).toBe(true);
+    });
+  });
+
+  describe("makeMove()", () => {
+    it("throws when the game has a winner", () => {
+      expect(() => {
+        getTestGameWithWinner(PLAYER_X).makeMove(0);
+      }).toThrowError(/game is over/gi);
+
+      expect(() => {
+        getTestGameWithWinner(PLAYER_O).makeMove(0);
+      }).toThrowError(/game is over/gi);
     });
     it("throws for invalid indices", () => {
-      const game = getTestGame();
       expect(() => {
-        game.makeMove(-1, PLAYER_X);
+        getTestGame().makeMove(-1);
       }).toThrowError(/invalid/gi);
 
       expect(() => {
-        game.makeMove(MAX + 1, PLAYER_X);
+        getTestGame().makeMove(MAX + 1);
       }).toThrowError(/invalid/gi);
     });
-    it("throws for invalid player", () => {
-      const game = getTestGame();
+    it("throws when the game is a draw", () => {
       expect(() => {
-        game.makeMove(0, "foo bar");
-      }).toThrowError(/invalid/gi);
+        getTestGameWithDraw().makeMove(0);
+      }).toThrowError(/draw/gi);
     });
-    it("barfs if you try to move for the wrong player", () => {
-      // TODO - refactor - make whosTurn a property and have it set
-      // TODO - correctly by makeMove, and update tests, etc
-      throw "todo";
+    it("makes move for valid indices", () => {
+      const game = getTestGame();
+      expect(game.makeMove(0).getBoard()[0]).toBe(PLAYER_X);
+      expect(game.makeMove(1).getBoard()[1]).toBe(PLAYER_O);
     });
-    it("sets the winner", () => {
-      throw `todo`;
+    it("throws for an occupied index", () => {
+      expect(() => {
+        getTestGame().makeMove(0).makeMove(0);
+      }).toThrowError(/has taken that spot/gi);
     });
-    it("makes the given move when conditions are valid", () => {
-      throw `todo`;
+  });
+
+  describe("getWinner()", () => {
+    it("returns the right player when they've won", () => {
+      expect(getTestGameWithWinner(PLAYER_X).getWinner()).toBe(PLAYER_X);
+      expect(getTestGameWithWinner(PLAYER_O).getWinner()).toBe(PLAYER_O);
+    });
+    it("returns null when there isn't a winner yet", () => {
+      expect(getTestGame().getWinner()).toBeNull();
+    });
+    it("returns DRAW when the game is a draw", () => {
+      expect(getTestGameWithDraw().getWinner()).toBe(DRAW);
     });
   });
 });
