@@ -6,8 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "jest",
-    "testw": "jest --watch",
-    "dev": "nodemon playground.ts"
+    "testw": "jest --watch"
   },
   "repository": {
     "type": "git",
