@@ -5,6 +5,10 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
+    "build": "npx tsc",
+    "zip": "cd dist/src && zip -r ../../archive.zip *",
+    "clean": "rm -rf dist/ archive.zip",
+    "rebuild": "npm run clean && npm run build && npm run zip",
     "test": "jest",
     "testw": "jest --watch"
   },
