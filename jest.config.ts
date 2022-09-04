@@ -77,7 +77,7 @@ const jestConfig: Config.InitialOptions = {
 
   // An array of directory names to be searched recursively up from the requiring module's location
   // moduleDirectories: [
-  //   "node_modules"
+  //   "node_modules",
   // ],
 
   // An array of file extensions your modules use
@@ -105,7 +105,7 @@ const jestConfig: Config.InitialOptions = {
   // notifyMode: "failure-change",
 
   // A preset that is used as a base for Jest's configuration
-  preset: 'ts-jest',
+  preset: "ts-jest",
 
   // Run tests from one or more projects
   // projects: undefined,
@@ -126,12 +126,10 @@ const jestConfig: Config.InitialOptions = {
   // restoreMocks: false,
 
   // The root directory that Jest should scan for tests and modules within
-  // rootDir: undefined,
+  // rootDir: "test",
 
   // A list of paths to directories that Jest should use to search for files in
-  // roots: [
-  //   "<rootDir>"
-  // ],
+  roots: ["test"],
 
   // Allows you to use a custom runner instead of Jest's default test runner
   // runner: "jest-runner",

@@ -1,7 +1,7 @@
 import { assert } from "console";
-import INextMoveGetter from "strategies/INextMoveGetter";
-import Game, { PLAYER_X, PLAYER_O, DRAW } from "../Game";
-import RandomNextMoveGetter, { MAX } from "../strategies/RandomNextMoveGetter";
+import INextMoveGetter from "../src/strategies/INextMoveGetter";
+import Game, { PLAYER_X, PLAYER_O, DRAW } from "../src/Game";
+import RandomNextMoveGetter, { MAX } from "../src/strategies/RandomNextMoveGetter";
 
 function getTestGame(): Game {
   const nmg: INextMoveGetter = new RandomNextMoveGetter({ min: 0, max: 8 });

@@ -1,7 +1,7 @@
 import RandomNextMoveGetter, {
   MIN,
   MAX,
-} from "../../strategies/RandomNextMoveGetter";
+} from "../../src/strategies/RandomNextMoveGetter";
 
 describe("RandomNextMoveGetter", () => {
   it("returns random whole numbers", () => {

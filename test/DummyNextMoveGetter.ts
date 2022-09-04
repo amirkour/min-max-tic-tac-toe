@@ -1,4 +1,4 @@
-import INextMoveGetter from "strategies/INextMoveGetter";
+import INextMoveGetter from "../src/strategies/INextMoveGetter";
 
 export default class DummyNextMoveGetter implements INextMoveGetter {
   getNextMove(): number {
