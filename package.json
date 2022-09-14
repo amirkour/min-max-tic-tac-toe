@@ -2,7 +2,7 @@
   "name": "min-max-tic-tac-toe",
   "version": "1.0.0",
   "description": "A javascript, min/max AI for playing tic tac toe",
-  "main": "index.ts",
+  "main": "./dist/src/index.js",
   "type": "module",
   "scripts": {
     "build": "npx tsc",
@@ -25,10 +25,7 @@
   "devDependencies": {
     "@types/jest": "^28.1.2",
     "jest": "^28.1.1",
-    "ts-node-dev": "latest",
     "ts-jest": "^28.0.5",
-    "ts-node": "^10.8.1",
-    "typescript": "^4.7.3",
-    "nodemon": "latest"
+    "typescript": "^4.7.3"
   }
 }
