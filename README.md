@@ -7,13 +7,13 @@ A javascript, min/max AI for playing tic tac toe
 
 when lambda functions depend on this package, you can bundle it into a zip file suitable for lambda layers like so: 
 
-`npm run layer:build` 
+`npm run layer:zip` 
 
 that should output a file named `archive.zip` to the base folder.
 
 ## publish layer
 
-to publish a newly updated archive.zip (after building it, see above) to an lambda layer:
+to publish a newly updated archive.zip to an lambda layer:
 
 `npm run layer:publish`
 
