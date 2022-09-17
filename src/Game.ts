@@ -12,7 +12,7 @@ export type MOVE = typeof PLAYER_X | typeof PLAYER_O | null;
 
 interface GameProps {
   nmg: INextMoveGetter;
-  board?: string[];
+  board?: string[] | null;
 }
 
 export default class Game {
