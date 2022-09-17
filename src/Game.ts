@@ -199,7 +199,7 @@ export default class Game {
 
       throw error;
     }
-    if (index < 0 || index > this.board.length)
+    if (index < 0 || index >= this.board.length)
       throw `Cannot make a move on space ${index} - invalid index`;
     if (this.board[index])
       throw `Cannot make a move on space ${index} - player ${this.board[index]} has taken that spot`;
