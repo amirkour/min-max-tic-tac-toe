@@ -1,7 +1,9 @@
 import { assert } from "console";
 import INextMoveGetter from "../src/strategies/INextMoveGetter";
 import Game, { PLAYER_X, PLAYER_O, DRAW } from "../src/Game";
-import RandomNextMoveGetter, { MAX } from "../src/strategies/RandomNextMoveGetter";
+import RandomNextMoveGetter, {
+  MAX,
+} from "../src/strategies/RandomNextMoveGetter";
 
 function getTestGame(): Game {
   const nmg: INextMoveGetter = new RandomNextMoveGetter({ min: 0, max: 8 });
@@ -168,6 +170,52 @@ describe("Game", () => {
     });
     it("returns DRAW when the game is a draw", () => {
       expect(getTestGameWithDraw().getWinner()).toBe(DRAW);
+    });
+  });
+
+  describe("constructor", () => {
+    describe("w/ a board param", () => {
+      let nmg: INextMoveGetter;
+
+      beforeEach(() => {
+        nmg = new RandomNextMoveGetter({ min: 0, max: 8 });
+      });
+
+      it("throws if board passed in doesnt have the right length", () => {
+        const board = new Array(10);
+        expect(() => {
+          new Game({ nmg, board });
+        }).toThrowError(/size/);
+      });
+
+      it("throws if board passed in has an invalid player", () => {
+        const board = new Array(9);
+        board[2] = "hi world";
+        expect(() => {
+          new Game({ nmg, board });
+        }).toThrowError(/player/);
+      });
+
+      it("throws if an invalid board is passed in", () => {
+        const board = new Array(9);
+        board[0] = PLAYER_X;
+        board[1] = PLAYER_X;
+        expect(() => {
+          new Game({ nmg, board });
+        }).toThrow(/invalid/i);
+      });
+
+      it("sets the winner when a valid board w/ a winner is passed in", () => {
+        const board = new Array(9);
+        board[0] = PLAYER_X;
+        board[3] = PLAYER_O;
+        board[1] = PLAYER_X;
+        board[4] = PLAYER_O;
+        board[2] = PLAYER_X;
+        board[8] = PLAYER_X;
+        const game = new Game({ nmg, board });
+        expect(game.getWinner()).not.toBeNull();
+      });
     });
   });
 });

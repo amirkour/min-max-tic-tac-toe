@@ -12,6 +12,7 @@ export type MOVE = typeof PLAYER_X | typeof PLAYER_O | null;
 
 interface GameProps {
   nmg: INextMoveGetter;
+  board?: string[];
 }
 
 export default class Game {
@@ -20,10 +21,31 @@ export default class Game {
   protected board: MOVE[];
   protected winner: typeof PLAYER_X | typeof PLAYER_O | typeof DRAW | null;
 
-  constructor({ nmg }: GameProps) {
+  constructor({ nmg, board }: GameProps) {
     this.nextMoveGetter = nmg;
     this.board = new Array(this.boardSize);
-    this.winner = null;
+
+    if (board) {
+      if (board.length !== this.boardSize)
+        throw `Cannot construct board of size ${board.length}`;
+
+      for (let i = 0; i < board.length; i++) {
+        let nextSpace = board[i];
+        if (!nextSpace) continue;
+
+        nextSpace = nextSpace.toLowerCase();
+        if (nextSpace === PLAYER_X) this.board[i] = PLAYER_X;
+        else if (nextSpace === PLAYER_O) this.board[i] = PLAYER_O;
+        else
+          throw `Cannot construct board w/ player ${board[i]} - only player ${PLAYER_X} or player ${PLAYER_O}`;
+      }
+
+      // calling this will throw an error if the board passed in
+      // has an invalid number/configuration of moves
+      this.whosTurn();
+    }
+
+    this.winner = this.getWinner();
   }
 
   public getBoard(): MOVE[] {
@@ -47,13 +69,19 @@ export default class Game {
   whosTurn(): MOVE {
     if (this.winner) return null;
     let xCount = 0;
-    let yCount = 0;
+    let oCount = 0;
     for (let i = 0; i < this.board.length; i++) {
-      if (this.board[i] === PLAYER_O) yCount++;
+      if (this.board[i] === PLAYER_O) oCount++;
       else if (this.board[i] === PLAYER_X) xCount++;
     }
 
-    return xCount <= yCount ? PLAYER_X : PLAYER_O;
+    // if x always goes first, then X will always be ahead
+    // by 1, or tied for number of moves (on a valid board.)
+    const diff = xCount - oCount;
+    if (diff !== 0 && diff !== 1)
+      throw `Invalid board detected: there cannot be ${xCount} '${PLAYER_X}' moves and ${oCount} '${PLAYER_O}' moves on a valid board!`;
+
+    return diff === 0 ? PLAYER_X : PLAYER_O;
   }
 
   gameOver(): boolean {
