@@ -212,7 +212,6 @@ describe("Game", () => {
         board[1] = PLAYER_X;
         board[4] = PLAYER_O;
         board[2] = PLAYER_X;
-        board[8] = PLAYER_X;
         const game = new Game({ nmg, board });
         expect(game.getWinner()).not.toBeNull();
       });
