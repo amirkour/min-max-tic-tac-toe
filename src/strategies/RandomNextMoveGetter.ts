@@ -1,15 +1,15 @@
 import INextMoveGetter from "./INextMoveGetter.js";
 
 interface MaxConstructorProps {
-  min: number;
-  max: number;
+  min?: number;
+  max?: number;
 }
 
 export const MAX = 100;
 export const MIN = 0;
 export default class RandomNextMoveGetter implements INextMoveGetter {
-  min: number = MIN;
-  max: number = MAX;
+  min: number;
+  max: number;
 
   constructor(
     { min = MIN, max = MAX }: MaxConstructorProps = { min: MIN, max: MAX }
