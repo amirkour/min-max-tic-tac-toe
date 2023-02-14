@@ -36,7 +36,7 @@ const jestConfig: Config.InitialOptions = {
   // ],
 
   // Indicates which provider should be used to instrument code for coverage
-  // coverageProvider: "babel",
+  coverageProvider: "v8",
 
   // A list of reporter names that Jest uses when writing coverage reports
   // coverageReporters: [
@@ -129,7 +129,7 @@ const jestConfig: Config.InitialOptions = {
   // rootDir: "test",
 
   // A list of paths to directories that Jest should use to search for files in
-  roots: ["test"],
+  // roots: ["test"],
 
   // Allows you to use a custom runner instead of Jest's default test runner
   // runner: "jest-runner",
@@ -147,7 +147,7 @@ const jestConfig: Config.InitialOptions = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  testEnvironment: "node",
+  // testEnvironment: "node",
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
