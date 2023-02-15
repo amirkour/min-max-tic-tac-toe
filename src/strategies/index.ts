@@ -1,4 +1,4 @@
-import INextMoveGetter from "./INextMoveGetter.js";
-import RandomNextMoveGetter from "./RandomNextMoveGetter.js";
+import INextMoveGetter from "./INextMoveGetter";
+import RandomNextMoveGetter, { MAX, MIN } from "./RandomNextMoveGetter";
 
-export { INextMoveGetter, RandomNextMoveGetter };
+export { INextMoveGetter, RandomNextMoveGetter, MAX, MIN };

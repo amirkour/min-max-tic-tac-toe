@@ -1,4 +1,4 @@
-import INextMoveGetter from "./INextMoveGetter.js";
+import INextMoveGetter from "./INextMoveGetter";
 
 interface MaxConstructorProps {
   min?: number;

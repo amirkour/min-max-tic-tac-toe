@@ -1,9 +1,6 @@
-import { assert } from "console";
 import INextMoveGetter from "../src/strategies/INextMoveGetter";
-import Game, { PLAYER_X, PLAYER_O, DRAW } from "../src/Game";
-import RandomNextMoveGetter, {
-  MAX,
-} from "../src/strategies/RandomNextMoveGetter";
+import Game, { PLAYER_X, PLAYER_O, DRAW, strategies } from "../src";
+const { RandomNextMoveGetter, MAX } = strategies;
 
 function getTestGame(): Game {
   const nmg: INextMoveGetter = new RandomNextMoveGetter({ min: 0, max: 8 });
@@ -69,7 +66,6 @@ describe("Game", () => {
         const arbitrarilyLarge = 100;
         for (let i = 0; i < arbitrarilyLarge; i++) {
           const nextMove = game.getNextMove();
-          assert(nextMove != null);
           if (nextMove != null) expect(board[nextMove]).toBeFalsy();
         }
       });

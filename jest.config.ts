@@ -1,14 +1,9 @@
-// for info on importing jest type metadata (which gives vscode
-// jest type hints) see:
-// https://www.npmjs.com/package/@jest/types
-import { Config } from "@jest/types";
-
 /*
- * For a detailed explanation regarding each configuration property and type check, visit:
+ * For a detailed explanation regarding each configuration property, visit:
  * https://jestjs.io/docs/configuration
  */
 
-const jestConfig: Config.InitialOptions = {
+module.exports = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -16,7 +11,7 @@ const jestConfig: Config.InitialOptions = {
   // bail: 0,
 
   // The directory where Jest should store its cached dependency information
-  // cacheDirectory: "C:\\Users\\amirk\\AppData\\Local\\Temp\\jest",
+  // cacheDirectory: "/private/var/folders/xm/hc_7zrtx6nb8q4_ymgvxjbqm0000gn/T/jest_dx",
 
   // Automatically clear mock calls, instances, contexts and results before every test
   clearMocks: true,
@@ -32,7 +27,7 @@ const jestConfig: Config.InitialOptions = {
 
   // An array of regexp pattern strings used to skip coverage collection
   // coveragePathIgnorePatterns: [
-  //   "\\\\node_modules\\\\"
+  //   "/node_modules/"
   // ],
 
   // Indicates which provider should be used to instrument code for coverage
@@ -77,7 +72,7 @@ const jestConfig: Config.InitialOptions = {
 
   // An array of directory names to be searched recursively up from the requiring module's location
   // moduleDirectories: [
-  //   "node_modules",
+  //   "node_modules"
   // ],
 
   // An array of file extensions your modules use
@@ -126,10 +121,12 @@ const jestConfig: Config.InitialOptions = {
   // restoreMocks: false,
 
   // The root directory that Jest should scan for tests and modules within
-  // rootDir: "test",
+  // rootDir: undefined,
 
   // A list of paths to directories that Jest should use to search for files in
-  // roots: ["test"],
+  // roots: [
+  //   "<rootDir>"
+  // ],
 
   // Allows you to use a custom runner instead of Jest's default test runner
   // runner: "jest-runner",
@@ -147,7 +144,7 @@ const jestConfig: Config.InitialOptions = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  // testEnvironment: "node",
+  // testEnvironment: "jest-environment-node",
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
@@ -163,7 +160,7 @@ const jestConfig: Config.InitialOptions = {
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
   // testPathIgnorePatterns: [
-  //   "\\\\node_modules\\\\"
+  //   "/node_modules/"
   // ],
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
@@ -180,8 +177,8 @@ const jestConfig: Config.InitialOptions = {
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   // transformIgnorePatterns: [
-  //   "\\\\node_modules\\\\",
-  //   "\\.pnp\\.[^\\\\]+$"
+  //   "/node_modules/",
+  //   "\\.pnp\\.[^\\/]+$"
   // ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
@@ -196,5 +193,3 @@ const jestConfig: Config.InitialOptions = {
   // Whether to use watchman for file crawling
   // watchman: true,
 };
-
-export default jestConfig;
