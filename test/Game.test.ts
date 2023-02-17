@@ -181,7 +181,7 @@ describe("Game", () => {
         const board = new Array(10);
         expect(() => {
           new Game({ nmg, board });
-        }).toThrowError(/size/);
+        }).toThrowError(/Can currently only support boards of length/);
       });
 
       it("throws if board passed in has an invalid player", () => {

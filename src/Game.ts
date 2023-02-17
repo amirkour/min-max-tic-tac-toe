@@ -1,3 +1,4 @@
+import RandomNextMoveGetter from "./strategies/RandomNextMoveGetter";
 import INextMoveGetter from "./strategies/INextMoveGetter";
 
 // the maximum number of times that getNextMove
@@ -11,7 +12,7 @@ export const DRAW = `draw`;
 export type MOVE = typeof PLAYER_X | typeof PLAYER_O | null;
 
 interface GameProps {
-  nmg: INextMoveGetter;
+  nmg?: INextMoveGetter;
   board?: string[] | null;
 }
 
@@ -22,12 +23,12 @@ export default class Game {
   protected winner: typeof PLAYER_X | typeof PLAYER_O | typeof DRAW | null;
 
   constructor({ nmg, board }: GameProps) {
-    this.nextMoveGetter = nmg;
+    this.nextMoveGetter = nmg || new RandomNextMoveGetter({ min: 0, max: 8 });
     this.board = new Array(this.boardSize);
 
     if (board) {
       if (board.length !== this.boardSize)
-        throw `Cannot construct board of size ${board.length}`;
+        throw `Can currently only support boards of length ${board.length}`;
 
       for (let i = 0; i < board.length; i++) {
         let nextSpace = board[i];
