@@ -1,19 +1,10 @@
 import RandomNextMoveGetter from "./strategies/RandomNextMoveGetter";
 import INextMoveGetter from "./strategies/INextMoveGetter";
-
-// the maximum number of times that getNextMove
-// should attempt to generate a valid next-move
-// before throwing an exception and giving up
-export const MAX_TIMES_TO_GENERATE_MOVE = 25;
-
-export const PLAYER_X = `x`;
-export const PLAYER_O = `o`;
-export const DRAW = `draw`;
-export type MOVE = typeof PLAYER_X | typeof PLAYER_O | null;
+import { PLAYER_X, PLAYER_O, DRAW, MOVE } from "./utils";
 
 interface GameProps {
   nmg?: INextMoveGetter;
-  board?: string[] | null;
+  board?: MOVE[] | null;
 }
 
 export default class Game {
@@ -34,7 +25,7 @@ export default class Game {
         let nextSpace = board[i];
         if (!nextSpace) continue;
 
-        nextSpace = nextSpace.toLowerCase();
+        nextSpace = nextSpace.toLowerCase() as MOVE
         if (nextSpace === PLAYER_X) this.board[i] = PLAYER_X;
         else if (nextSpace === PLAYER_O) this.board[i] = PLAYER_O;
         else
@@ -55,14 +46,8 @@ export default class Game {
 
   getNextMove(): number | null {
     if (this.winner) return null;
-    let next = this.nextMoveGetter.getNextMove();
-    let i = 0;
-    for (; i < MAX_TIMES_TO_GENERATE_MOVE && this.board[next]; i++)
-      next = this.nextMoveGetter.getNextMove();
-
-    if (i === MAX_TIMES_TO_GENERATE_MOVE)
-      throw `Maximum number of attempts to generate a move have been exceeded (${MAX_TIMES_TO_GENERATE_MOVE})`;
-
+    let next = this.nextMoveGetter.getNextMove(this.board);
+    
     return next;
   }
 

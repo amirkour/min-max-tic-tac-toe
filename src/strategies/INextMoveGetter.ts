@@ -1,3 +1,4 @@
+import { MOVE } from "../utils";
 export default interface INextMoveGetter {
-  getNextMove(): number;
+  getNextMove(board: MOVE[]): number;
 }

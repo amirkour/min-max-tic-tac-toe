@@ -7,9 +7,9 @@ describe("RandomNextMoveGetter", () => {
   it("returns random whole numbers", () => {
     const nmg = new RandomNextMoveGetter();
 
-    const first = nmg.getNextMove();
-    const second = nmg.getNextMove();
-    const third = nmg.getNextMove();
+    const first = nmg.getNextMove([]);
+    const second = nmg.getNextMove([]);
+    const third = nmg.getNextMove([]);
 
     expect(first % 1).toBe(0);
     expect(second % 1).toBe(0);
@@ -36,7 +36,7 @@ describe("RandomNextMoveGetter", () => {
 
     const arbitrarilyLarge = 100;
     for (let i = 0; i < arbitrarilyLarge; i++) {
-      const next = nmg.getNextMove();
+      const next = nmg.getNextMove([]);
       expect(next).toBeGreaterThanOrEqual(min);
       expect(next).toBeLessThanOrEqual(max);
     }
