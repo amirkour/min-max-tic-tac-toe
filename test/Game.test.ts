@@ -376,4 +376,59 @@ describe("Game", () => {
       });
     });
   });
+  describe("#twoInADiagonalValue", () => {
+    describe("top-left to bottom-right", () => {
+      it("xo--x---- -> value of 1", () => {
+        const game = new Game({
+          board: [PLAYER_X, PLAYER_O, , , PLAYER_X, , , , null],
+        });
+        expect(game.twoInADiagonalValue(PLAYER_X)).toBe(1);
+      });
+      it("xo------x -> value of 1", () => {
+        const game = new Game({
+          board: [PLAYER_X, PLAYER_O, , , , , , , PLAYER_X],
+        });
+        expect(game.twoInADiagonalValue(PLAYER_X)).toBe(1);
+      });
+      it("-o--x---x -> value of 1", () => {
+        const game = new Game({
+          board: [, PLAYER_O, , , PLAYER_X, , , , PLAYER_X],
+        });
+        expect(game.twoInADiagonalValue(PLAYER_X)).toBe(1);
+      });
+      it("returns negative for o", () => {
+        const game = new Game({
+          board: [PLAYER_O, PLAYER_X, PLAYER_X, , PLAYER_O, , , , null],
+        });
+        expect(game.twoInADiagonalValue(PLAYER_O)).toBe(-1);
+      });
+    });
+
+    describe("top-right to bottom-left", () => {
+      it("-ox-x---- -> value of 1", () => {
+        const game = new Game({
+          board: [, PLAYER_O, PLAYER_X, , PLAYER_X, , , , null],
+        });
+        expect(game.twoInADiagonalValue(PLAYER_X)).toBe(1);
+      });
+      it("-o--x-x-- -> value of 1", () => {
+        const game = new Game({
+          board: [, PLAYER_O, , , PLAYER_X, , PLAYER_X, , null],
+        });
+        expect(game.twoInADiagonalValue(PLAYER_X)).toBe(1);
+      });
+      it("-ox---x-- -> value of 1", () => {
+        const game = new Game({
+          board: [PLAYER_O, , , , PLAYER_X, , PLAYER_X, , null],
+        });
+        expect(game.twoInADiagonalValue(PLAYER_X)).toBe(1);
+      });
+      it("returns negative for o", () => {
+        const game = new Game({
+          board: [PLAYER_X, PLAYER_X, PLAYER_O, , PLAYER_O, , , , null],
+        });
+        expect(game.twoInADiagonalValue(PLAYER_O)).toBe(-1);
+      });
+    });
+  });
 });

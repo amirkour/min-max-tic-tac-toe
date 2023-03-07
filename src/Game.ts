@@ -254,9 +254,50 @@ export default class Game {
     return player == PLAYER_X ? value : value * -1;
   }
 
-  twoDiagonalValue(player: NON_NULL_MOVE) {
+  twoInADiagonalValue(player: NON_NULL_MOVE) {
     let value = 0;
-    // TODO
-    return value;
+    if (
+      player == this.board[0] &&
+      this.board[0] == this.board[4] &&
+      this.board[8] == null
+    )
+      value++;
+
+    if (
+      player == this.board[0] &&
+      this.board[0] == this.board[8] &&
+      this.board[4] == null
+    )
+      value++;
+
+    if (
+      player == this.board[4] &&
+      this.board[4] == this.board[8] &&
+      this.board[0] == null
+    )
+      value++;
+
+    if (
+      player == this.board[2] &&
+      this.board[2] == this.board[4] &&
+      this.board[6] == null
+    )
+      value++;
+
+    if (
+      player == this.board[2] &&
+      this.board[2] == this.board[6] &&
+      this.board[4] == null
+    )
+      value++;
+
+    if (
+      player == this.board[4] &&
+      this.board[4] == this.board[6] &&
+      this.board[2] == null
+    )
+      value++;
+
+    return player == PLAYER_X ? value : value * -1;
   }
 }
