@@ -12,6 +12,17 @@ export default class Game {
   protected boardSize: number = 9; // default to 9 for now ... could be configurable later
   protected board: MOVE[];
   protected winner: typeof PLAYER_X | typeof PLAYER_O | typeof DRAW | null;
+  static WINNING_CONFIGS = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  static MAX_BOARD_VALUE = 100;
 
   constructor({ nmg, board }: GameProps) {
     this.nextMoveGetter = nmg || new RandomNextMoveGetter({ min: 0, max: 8 });
@@ -19,7 +30,7 @@ export default class Game {
 
     if (board) {
       if (board.length !== this.boardSize)
-        throw `Can currently only support boards of length ${board.length}`;
+        throw `Can currently only support boards of length 9`;
 
       for (let i = 0; i < board.length; i++) {
         let nextSpace = board[i];
@@ -74,91 +85,15 @@ export default class Game {
     return this.winner != null;
   }
 
-  protected columnWin(
-    player: typeof PLAYER_X | typeof PLAYER_O,
-    index: number
-  ): boolean {
-    if (index < 0 || index > 2) return false;
-
-    let isWin = false;
-    switch (index) {
-      case 0:
-        isWin =
-          this.board[0] === this.board[3] &&
-          this.board[3] === this.board[6] &&
-          this.board[6] === player;
-        break;
-      case 1:
-        isWin =
-          this.board[1] === this.board[4] &&
-          this.board[4] === this.board[7] &&
-          this.board[7] === player;
-        break;
-      case 2:
-        isWin =
-          this.board[2] === this.board[5] &&
-          this.board[5] === this.board[8] &&
-          this.board[8] === player;
-        break;
-      default:
-        isWin = false;
-        break;
-    }
-
-    return isWin;
-  }
-
-  protected rowWin(
-    player: typeof PLAYER_X | typeof PLAYER_O,
-    index: number
-  ): boolean {
-    if (index < 0 || index > 2) return false;
-
-    let isWin = false;
-    switch (index) {
-      case 0:
-        isWin =
-          this.board[0] === this.board[1] &&
-          this.board[1] === this.board[2] &&
-          this.board[2] === player;
-        break;
-      case 1:
-        isWin =
-          this.board[3] === this.board[4] &&
-          this.board[4] === this.board[5] &&
-          this.board[5] === player;
-        break;
-      case 2:
-        isWin =
-          this.board[6] === this.board[7] &&
-          this.board[7] === this.board[8] &&
-          this.board[8] === player;
-        break;
-      default:
-        isWin = false;
-        break;
-    }
-
-    return isWin;
-  }
-
-  protected diagonalWin(player: typeof PLAYER_O | typeof PLAYER_X): boolean {
-    return (
-      (this.board[0] === this.board[4] &&
-        this.board[4] === this.board[8] &&
-        this.board[8] === player) ||
-      (this.board[2] === this.board[4] &&
-        this.board[4] === this.board[6] &&
-        this.board[6] === player)
+  threeInARow(player: NON_NULL_MOVE): boolean {
+    const winningConfig = Game.WINNING_CONFIGS.find(
+      (cfg) =>
+        this.board[cfg[0]] == this.board[cfg[1]] &&
+        this.board[cfg[1]] == this.board[cfg[2]] &&
+        this.board[cfg[2]] == player
     );
-  }
 
-  protected threeInARow(player: typeof PLAYER_X | typeof PLAYER_O): boolean {
-    for (let i = 0; i < 3; i++) {
-      if (this.columnWin(player, i) || this.rowWin(player, i)) return true;
-    }
-
-    return this.diagonalWin(player);
+    return winningConfig != null;
   }
 
   public getWinner(): typeof PLAYER_X | typeof PLAYER_O | typeof DRAW | null {
@@ -198,10 +133,11 @@ export default class Game {
 
   /**
    * Evaluate and return the value of all one-way winning opportunities
-   * on this game's current board configuration for the given player.
-   * @param player the player to evaluate the current board against
-   * @returns the combined value of all 1-way win opportunities for the
-   *          given player
+   * on this game's current board and for the given player.
+   * @returns positive if X has more winning opportutinies,
+   *          negative if O has more winning opportunities,
+   *          zero if there are equal or non-existing winning opportunities
+   *          for either/both players
    */
   oneWayWinValue(): number {
     const twoInARowEvaluators = [
@@ -326,5 +262,11 @@ export default class Game {
       value++;
 
     return player == PLAYER_X ? value : value * -1;
+  }
+
+  getBoardValue(): number {
+    if (this.threeInARow(PLAYER_X)) return Game.MAX_BOARD_VALUE;
+    if (this.threeInARow(PLAYER_O)) return Game.MAX_BOARD_VALUE * -1;
+    return this.oneWayWinValue();
   }
 }

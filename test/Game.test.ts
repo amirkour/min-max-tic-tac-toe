@@ -487,4 +487,79 @@ describe("Game", () => {
       });
     });
   });
+  describe("#getBoardValue", () => {
+    describe("three in a row present", () => {
+      afterEach(() => {
+        jest.restoreAllMocks();
+      });
+      it(`xxxoo---- -> depends on oneWayWinValue`, () => {
+        const game = new Game({
+          board: [PLAYER_X, PLAYER_X, PLAYER_X, PLAYER_O, PLAYER_O, , , , ,],
+        });
+        const mockOneWayWin = jest.spyOn(game, "oneWayWinValue");
+        game.getBoardValue();
+        expect(mockOneWayWin).not.toHaveBeenCalled();
+      });
+      it(`oooxx-x-- -> depends on oneWayWinValue`, () => {
+        const game = new Game({
+          board: [
+            PLAYER_O,
+            PLAYER_O,
+            PLAYER_O,
+            PLAYER_X,
+            PLAYER_X,
+            ,
+            PLAYER_X,
+            ,
+            ,
+          ],
+        });
+        const mockOneWayWin = jest.spyOn(game, "oneWayWinValue");
+        game.getBoardValue();
+        expect(mockOneWayWin).not.toHaveBeenCalled();
+      });
+      it(`xxxoo---- -> returns max board value`, () => {
+        const game = new Game({
+          board: [PLAYER_X, PLAYER_X, PLAYER_X, PLAYER_O, PLAYER_O, , , , ,],
+        });
+        expect(game.getBoardValue()).toBe(Game.MAX_BOARD_VALUE);
+      });
+      it(`oooxx-x-- -> negative max board value`, () => {
+        const game = new Game({
+          board: [
+            PLAYER_O,
+            PLAYER_O,
+            PLAYER_O,
+            PLAYER_X,
+            PLAYER_X,
+            ,
+            PLAYER_X,
+            ,
+            ,
+          ],
+        });
+        expect(game.getBoardValue()).toBe(Game.MAX_BOARD_VALUE * -1);
+      });
+    });
+    describe("three in a row NOT present", () => {
+      afterEach(() => jest.resetAllMocks());
+      it(`xoxo----- -> NOT max board value`, () => {
+        const game = new Game({
+          board: [PLAYER_X, PLAYER_O, PLAYER_X, PLAYER_O, , , , , ,],
+        });
+        expect(game.getBoardValue()).not.toBe(Game.MAX_BOARD_VALUE);
+        expect(game.getBoardValue()).not.toBe(Game.MAX_BOARD_VALUE * -1);
+      });
+      it(`xoxo----- -> depends on oneWayWinValue `, () => {
+        const game = new Game({
+          board: [PLAYER_X, PLAYER_O, PLAYER_X, PLAYER_O, , , , , ,],
+        });
+        const mockOneWayWin = jest.spyOn(game, "oneWayWinValue");
+
+        expect(mockOneWayWin).not.toHaveBeenCalled();
+        game.getBoardValue();
+        expect(mockOneWayWin).toHaveBeenCalled();
+      });
+    });
+  });
 });
