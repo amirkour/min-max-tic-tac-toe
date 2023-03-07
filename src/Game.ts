@@ -227,8 +227,31 @@ export default class Game {
 
   twoInAColumnValue(player: NON_NULL_MOVE) {
     let value = 0;
-    // TODO
-    return value;
+    for (let i = 0; i < 3; i++) {
+      let col = i;
+      if (
+        player == this.board[col] &&
+        this.board[col] == this.board[col + 3] &&
+        this.board[col + 6] == null
+      )
+        value++;
+
+      if (
+        player == this.board[col + 3] &&
+        this.board[col + 3] == this.board[col + 6] &&
+        this.board[col] == null
+      )
+        value++;
+
+      if (
+        player == this.board[col] &&
+        this.board[col] == this.board[col + 6] &&
+        this.board[col + 3] == null
+      )
+        value++;
+    }
+
+    return player == PLAYER_X ? value : value * -1;
   }
 
   twoDiagonalValue(player: NON_NULL_MOVE) {

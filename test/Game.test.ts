@@ -294,4 +294,86 @@ describe("Game", () => {
       });
     });
   });
+  describe("#twoInAColumnValue", () => {
+    describe(`first column`, () => {
+      it("[x,-,-,x,-,-,-,-,o] -> value of 1", () => {
+        const game = new Game({
+          board: [PLAYER_X, , , PLAYER_X, , , , , PLAYER_O],
+        });
+        expect(game.twoInAColumnValue(PLAYER_X)).toBe(1);
+      });
+      it("[x,-,-,-,-,-,x,-,o] -> value of 1", () => {
+        const game = new Game({
+          board: [PLAYER_X, , , , , , PLAYER_X, , PLAYER_O],
+        });
+        expect(game.twoInAColumnValue(PLAYER_X)).toBe(1);
+      });
+      it("[-,-,-,x,-,-,x,-,o] -> value of 1", () => {
+        const game = new Game({
+          board: [, , , PLAYER_X, , , PLAYER_X, , PLAYER_O],
+        });
+        expect(game.twoInAColumnValue(PLAYER_X)).toBe(1);
+      });
+      it("returns negative for player O", () => {
+        const game = new Game({
+          board: [, , , PLAYER_O, , , PLAYER_O, PLAYER_X, PLAYER_X],
+        });
+        expect(game.twoInAColumnValue(PLAYER_O)).toBe(-1);
+      });
+    });
+
+    describe(`second column`, () => {
+      it("[-,x,-,-,x,-,-,-,o] -> value of 1", () => {
+        const game = new Game({
+          board: [, PLAYER_X, , , PLAYER_X, , , , PLAYER_O],
+        });
+        expect(game.twoInAColumnValue(PLAYER_X)).toBe(1);
+      });
+      it("[-,x,-,-,-,-,-,x,o] -> value of 1", () => {
+        const game = new Game({
+          board: [, PLAYER_X, , , , , , PLAYER_X, PLAYER_O],
+        });
+        expect(game.twoInAColumnValue(PLAYER_X)).toBe(1);
+      });
+      it("[-,-,-,-,x,-,-,x,o] -> value of 1", () => {
+        const game = new Game({
+          board: [, , , , PLAYER_X, , , PLAYER_X, PLAYER_O],
+        });
+        expect(game.twoInAColumnValue(PLAYER_X)).toBe(1);
+      });
+      it("returns negative for player O", () => {
+        const game = new Game({
+          board: [, , , , PLAYER_O, , PLAYER_X, PLAYER_O, PLAYER_X],
+        });
+        expect(game.twoInAColumnValue(PLAYER_O)).toBe(-1);
+      });
+    });
+
+    describe(`third column`, () => {
+      it("[-,-,x,-,-,x,-,o,-] -> value of 1", () => {
+        const game = new Game({
+          board: [, , PLAYER_X, , , PLAYER_X, , PLAYER_O, null],
+        });
+        expect(game.twoInAColumnValue(PLAYER_X)).toBe(1);
+      });
+      it("[-,-,x,-,-,-,-,o,x] -> value of 1", () => {
+        const game = new Game({
+          board: [, , PLAYER_X, , , , , PLAYER_O, PLAYER_X],
+        });
+        expect(game.twoInAColumnValue(PLAYER_X)).toBe(1);
+      });
+      it("[-,-,-,-,-,x,-,o,x] -> value of 1", () => {
+        const game = new Game({
+          board: [, , , , , PLAYER_X, , PLAYER_O, PLAYER_X],
+        });
+        expect(game.twoInAColumnValue(PLAYER_X)).toBe(1);
+      });
+      it("returns negative for player O", () => {
+        const game = new Game({
+          board: [, , , , , PLAYER_O, PLAYER_X, PLAYER_X, PLAYER_O],
+        });
+        expect(game.twoInAColumnValue(PLAYER_O)).toBe(-1);
+      });
+    });
+  });
 });
