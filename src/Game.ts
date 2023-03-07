@@ -196,6 +196,33 @@ export default class Game {
     return this;
   }
 
+  /**
+   * Evaluate and return the value of all one-way winning opportunities
+   * on this game's current board configuration for the given player.
+   * @param player the player to evaluate the current board against
+   * @returns the combined value of all 1-way win opportunities for the
+   *          given player
+   */
+  oneWayWinValue(): number {
+    const twoInARowEvaluators = [
+      this.twoInARowValue,
+      this.twoInAColumnValue,
+      this.twoInADiagonalValue,
+    ];
+
+    let value = 0,
+      self = this;
+    value = twoInARowEvaluators.reduce(
+      (total, cb) => total + cb.call(self, PLAYER_X),
+      value
+    );
+    value = twoInARowEvaluators.reduce(
+      (total, cb) => total + cb.call(self, PLAYER_O),
+      value
+    );
+    return value;
+  }
+
   twoInARowValue(player: NON_NULL_MOVE): number {
     let value = 0;
     for (let i = 0; i < 3; i++) {

@@ -431,4 +431,60 @@ describe("Game", () => {
       });
     });
   });
+  describe("#oneWayWinValue", () => {
+    describe("x scenarios", () => {
+      it("xo-xo--- -> 0 value", () => {
+        const game = new Game({
+          board: [PLAYER_X, PLAYER_O, , PLAYER_X, PLAYER_O, , , , null],
+        });
+        expect(game.oneWayWinValue()).toBe(0);
+      });
+      it("xo-x---- -> 1 value", () => {
+        const game = new Game({
+          board: [PLAYER_X, PLAYER_O, , PLAYER_X, , , , , null],
+        });
+        expect(game.oneWayWinValue()).toBe(1);
+      });
+      it("xox-xo-- -> 2 value", () => {
+        const game = new Game({
+          board: [PLAYER_X, PLAYER_O, PLAYER_X, , PLAYER_X, PLAYER_O, , , null],
+        });
+        expect(game.oneWayWinValue()).toBe(2);
+      });
+    });
+    describe("o scenarios", () => {
+      it("-x-oo-oxx -> -3 value", () => {
+        const game = new Game({
+          board: [
+            ,
+            PLAYER_X,
+            ,
+            PLAYER_O,
+            PLAYER_O,
+            ,
+            PLAYER_O,
+            PLAYER_X,
+            PLAYER_X,
+          ],
+        });
+        expect(game.oneWayWinValue()).toBe(-3);
+      });
+      it("-xoo--oxx -> -1 value", () => {
+        const game = new Game({
+          board: [
+            ,
+            PLAYER_X,
+            PLAYER_O,
+            PLAYER_O,
+            ,
+            ,
+            PLAYER_O,
+            PLAYER_X,
+            PLAYER_X,
+          ],
+        });
+        expect(game.oneWayWinValue()).toBe(-1);
+      });
+    });
+  });
 });
