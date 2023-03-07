@@ -1,5 +1,5 @@
 import INextMoveGetter from "../src/strategies/INextMoveGetter";
-import Game, { PLAYER_X, PLAYER_O, DRAW, strategies } from "../src";
+import Game, { PLAYER_X, PLAYER_O, DRAW, MOVE, strategies } from "../src";
 const { RandomNextMoveGetter, MAX } = strategies;
 
 function getTestGame(): Game {
@@ -210,6 +210,87 @@ describe("Game", () => {
         board[2] = PLAYER_X;
         const game = new Game({ nmg, board });
         expect(game.getWinner()).not.toBeNull();
+      });
+    });
+  });
+
+  describe(`#twoInARowValue`, () => {
+    describe(`first row`, () => {
+      it(`[x,x,-] -> value of 1`, () => {
+        const game = new Game({
+          board: [PLAYER_X, PLAYER_X, , PLAYER_O, , , , , ,],
+        });
+        expect(game.twoInARowValue(PLAYER_X)).toBe(1);
+      });
+      it(`[x,-,x] -> value of 1`, () => {
+        const game = new Game({
+          board: [PLAYER_X, , PLAYER_X, PLAYER_O, , , , , ,],
+        });
+        expect(game.twoInARowValue(PLAYER_X)).toBe(1);
+      });
+      it(`[-,x,x] -> value of 1`, () => {
+        const game = new Game({
+          board: [, PLAYER_X, PLAYER_X, PLAYER_O, , , , , ,],
+        });
+        expect(game.twoInARowValue(PLAYER_X)).toBe(1);
+      });
+      it(`negative value for PLAYER_O`, () => {
+        const game = new Game({
+          board: [, PLAYER_O, PLAYER_O, PLAYER_X, PLAYER_X, , , , ,],
+        });
+        expect(game.twoInARowValue(PLAYER_O)).toBe(-1);
+      });
+    });
+    describe(`second row`, () => {
+      it(`[-,-,-,x,x,-] -> value of 1`, () => {
+        const game = new Game({
+          board: [, , , PLAYER_X, PLAYER_X, , PLAYER_O, , ,],
+        });
+        expect(game.twoInARowValue(PLAYER_X)).toBe(1);
+      });
+      it(`[-,-,-,x,-,x] -> value of 1`, () => {
+        const game = new Game({
+          board: [, , , PLAYER_X, , PLAYER_X, PLAYER_O, , ,],
+        });
+        expect(game.twoInARowValue(PLAYER_X)).toBe(1);
+      });
+      it(`[-,-,-,-,x,x] -> value of 1`, () => {
+        const game = new Game({
+          board: [, , , , PLAYER_X, PLAYER_X, PLAYER_O, , ,],
+        });
+        expect(game.twoInARowValue(PLAYER_X)).toBe(1);
+      });
+      it(`negative value for PLAYER_O`, () => {
+        const game = new Game({
+          board: [, , , , PLAYER_O, PLAYER_O, PLAYER_X, PLAYER_X, null],
+        });
+        expect(game.twoInARowValue(PLAYER_O)).toBe(-1);
+      });
+    });
+    describe(`third row`, () => {
+      it(`[-,-,-,-,-,-,x,x,-] -> value of 1`, () => {
+        const game = new Game({
+          board: [PLAYER_O, , , , , , PLAYER_X, PLAYER_X, null],
+        });
+        expect(game.twoInARowValue(PLAYER_X)).toBe(1);
+      });
+      it(`[-,-,-,-,-,-,x,-,x] -> value of 1`, () => {
+        const game = new Game({
+          board: [PLAYER_O, , , , , , PLAYER_X, , PLAYER_X],
+        });
+        expect(game.twoInARowValue(PLAYER_X)).toBe(1);
+      });
+      it(`[-,-,-,-,-,-,-,x,x] -> value of 1`, () => {
+        const game = new Game({
+          board: [PLAYER_O, , , , , , null, PLAYER_X, PLAYER_X],
+        });
+        expect(game.twoInARowValue(PLAYER_X)).toBe(1);
+      });
+      it(`negative value for PLAYER_O`, () => {
+        const game = new Game({
+          board: [PLAYER_X, PLAYER_X, , , , , null, PLAYER_O, PLAYER_O],
+        });
+        expect(game.twoInARowValue(PLAYER_O)).toBe(-1);
       });
     });
   });

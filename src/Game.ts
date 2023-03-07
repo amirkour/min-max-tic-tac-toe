@@ -1,6 +1,6 @@
 import RandomNextMoveGetter from "./strategies/RandomNextMoveGetter";
 import INextMoveGetter from "./strategies/INextMoveGetter";
-import { PLAYER_X, PLAYER_O, DRAW, MOVE } from "./utils";
+import { PLAYER_X, PLAYER_O, DRAW, MOVE, NON_NULL_MOVE } from "./utils";
 
 interface GameProps {
   nmg?: INextMoveGetter;
@@ -25,7 +25,7 @@ export default class Game {
         let nextSpace = board[i];
         if (!nextSpace) continue;
 
-        nextSpace = nextSpace.toLowerCase() as MOVE
+        nextSpace = nextSpace.toLowerCase() as MOVE;
         if (nextSpace === PLAYER_X) this.board[i] = PLAYER_X;
         else if (nextSpace === PLAYER_O) this.board[i] = PLAYER_O;
         else
@@ -47,7 +47,7 @@ export default class Game {
   getNextMove(): number | null {
     if (this.winner) return null;
     let next = this.nextMoveGetter.getNextMove(this.board);
-    
+
     return next;
   }
 
@@ -194,5 +194,46 @@ export default class Game {
     this.winner = this.getWinner();
 
     return this;
+  }
+
+  twoInARowValue(player: NON_NULL_MOVE): number {
+    let value = 0;
+    for (let i = 0; i < 3; i++) {
+      const row = i * 3;
+      if (
+        player == this.board[row] &&
+        this.board[row] == this.board[row + 1] &&
+        this.board[row + 2] == null
+      )
+        value++;
+
+      if (
+        player == this.board[row + 2] &&
+        this.board[row + 2] == this.board[row] &&
+        this.board[row + 1] == null
+      )
+        value++;
+
+      if (
+        player == this.board[row + 1] &&
+        this.board[row + 1] == this.board[row + 2] &&
+        this.board[row] == null
+      )
+        value++;
+    }
+
+    return player == PLAYER_X ? value : value * -1;
+  }
+
+  twoInAColumnValue(player: NON_NULL_MOVE) {
+    let value = 0;
+    // TODO
+    return value;
+  }
+
+  twoDiagonalValue(player: NON_NULL_MOVE) {
+    let value = 0;
+    // TODO
+    return value;
   }
 }
