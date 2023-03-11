@@ -23,3 +23,4 @@ export const threeInARow = (board: MOVE[], player: NON_NULL_MOVE): boolean => {
 
   return winningConfig != null;
 };
+export const debugging = process.env.NODE_DEBUGGING === "true";

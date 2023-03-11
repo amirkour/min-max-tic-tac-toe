@@ -1,5 +1,6 @@
 import Game, { strategies } from "./src";
 const { MinMaxNextMoveGetter } = strategies;
+import { debugging, MOVE } from "./src/utils";
 import readline from "readline";
 
 const rl = readline.createInterface({
@@ -8,25 +9,41 @@ const rl = readline.createInterface({
   terminal: false,
 });
 
+function printBoard(board: MOVE[]) {
+  console.log(`game state:`);
+  console.log(`${board[0] || "-"}${board[1] || "-"}${board[2] || "-"}`);
+  console.log(`${board[3] || "-"}${board[4] || "-"}${board[5] || "-"}`);
+  console.log(`${board[6] || "-"}${board[7] || "-"}${board[8] || "-"}`);
+}
+
 function doStuff(move: number) {
   console.log(`making move ${move}`);
   game.makeMove(move);
+  if (game.gameOver()) {
+    console.log(`game over: ${game.getWinner()} wins`);
+    process.exit(0);
+  }
 
   let computerMove = game.getNextMove();
   if (computerMove == null) {
-    console.log(`game is over!?`);
+    console.log(`game over: ${game.getWinner()} wins`);
+    process.exit(0);
   } else {
     game.makeMove(computerMove);
   }
 
-  console.log(`got this game: ${game.getBoard()}`);
+  if (game.gameOver()) {
+    console.log(`game over: ${game.getWinner()} wins`);
+    process.exit(0);
+  }
 }
 
-const game = new Game({ nmg: new MinMaxNextMoveGetter({ maxPly: 4 }) });
+console.log(`debug mode: ${debugging === true}`);
+const game = new Game({ nmg: new MinMaxNextMoveGetter({ maxPly: 2 }) });
 prompt();
 
 function prompt() {
-  console.log(`\n`);
+  printBoard(game.getBoard());
   console.log(`enter a move: `);
 }
 
@@ -43,8 +60,6 @@ rl.on("line", (line) => {
     prompt();
   } else {
     doStuff(input);
-    
-    prompt();
   }
 
   prompt();
