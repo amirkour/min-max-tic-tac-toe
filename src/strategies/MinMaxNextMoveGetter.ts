@@ -159,11 +159,11 @@ export default class MinMaxNextMoveGetter implements INextMoveGetter {
     let value = 0,
       self = this;
     value = twoInARowEvaluators.reduce(
-      (total, cb) => total + cb.call(self, board, PLAYER_X),
+      (runningTotal, evaluator) => runningTotal + evaluator.call(self, board, PLAYER_X),
       value
     );
     value = twoInARowEvaluators.reduce(
-      (total, cb) => total + cb.call(self, board, PLAYER_O),
+      (runningTotal, evaluator) => runningTotal + evaluator.call(self, board, PLAYER_O),
       value
     );
     return value;
