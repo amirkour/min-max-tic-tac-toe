@@ -30,7 +30,7 @@ export default class Game {
 
     if (board) {
       if (board.length !== this.boardSize)
-        throw `Can currently only support boards of length 9`;
+        throw `Can currently only support boards of length ${this.boardSize}`;
 
       for (let i = 0; i < board.length; i++) {
         let nextSpace = board[i];
@@ -133,7 +133,7 @@ export default class Game {
 
   /**
    * Evaluate and return the value of all one-way winning opportunities
-   * on this game's current board and for the given player.
+   * on this game's current board.
    * @returns positive if X has more winning opportutinies,
    *          negative if O has more winning opportunities,
    *          zero if there are equal or non-existing winning opportunities
