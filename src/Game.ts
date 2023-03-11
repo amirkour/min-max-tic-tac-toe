@@ -1,6 +1,13 @@
 import RandomNextMoveGetter from "./strategies/RandomNextMoveGetter";
 import INextMoveGetter from "./strategies/INextMoveGetter";
-import { PLAYER_X, PLAYER_O, DRAW, MOVE, NON_NULL_MOVE } from "./utils";
+import {
+  PLAYER_X,
+  PLAYER_O,
+  DRAW,
+  MOVE,
+  NON_NULL_MOVE,
+  threeInARow,
+} from "./utils";
 
 interface GameProps {
   nmg?: INextMoveGetter;
@@ -12,19 +19,8 @@ export default class Game {
   protected boardSize: number = 9; // default to 9 for now ... could be configurable later
   protected board: MOVE[];
   protected winner: typeof PLAYER_X | typeof PLAYER_O | typeof DRAW | null;
-  static WINNING_CONFIGS = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
-  static MAX_BOARD_VALUE = 100;
 
-  constructor({ nmg, board }: GameProps) {
+  constructor({ nmg, board }: GameProps = {}) {
     this.nextMoveGetter = nmg || new RandomNextMoveGetter({ min: 0, max: 8 });
     this.board = new Array(this.boardSize);
 
@@ -85,21 +81,10 @@ export default class Game {
     return this.winner != null;
   }
 
-  threeInARow(player: NON_NULL_MOVE): boolean {
-    const winningConfig = Game.WINNING_CONFIGS.find(
-      (cfg) =>
-        this.board[cfg[0]] == this.board[cfg[1]] &&
-        this.board[cfg[1]] == this.board[cfg[2]] &&
-        this.board[cfg[2]] == player
-    );
-
-    return winningConfig != null;
-  }
-
   public getWinner(): typeof PLAYER_X | typeof PLAYER_O | typeof DRAW | null {
     if (this.winner) return this.winner;
-    if (this.threeInARow(PLAYER_X)) return PLAYER_X;
-    else if (this.threeInARow(PLAYER_O)) return PLAYER_O;
+    if (threeInARow(this.board, PLAYER_X)) return PLAYER_X;
+    else if (threeInARow(this.board, PLAYER_O)) return PLAYER_O;
 
     // if there are more moves available on the board,
     // then there isn't a winner yet
@@ -129,144 +114,5 @@ export default class Game {
     this.winner = this.getWinner();
 
     return this;
-  }
-
-  /**
-   * Evaluate and return the value of all one-way winning opportunities
-   * on this game's current board.
-   * @returns positive if X has more winning opportutinies,
-   *          negative if O has more winning opportunities,
-   *          zero if there are equal or non-existing winning opportunities
-   *          for either/both players
-   */
-  oneWayWinValue(): number {
-    const twoInARowEvaluators = [
-      this.twoInARowValue,
-      this.twoInAColumnValue,
-      this.twoInADiagonalValue,
-    ];
-
-    let value = 0,
-      self = this;
-    value = twoInARowEvaluators.reduce(
-      (total, cb) => total + cb.call(self, PLAYER_X),
-      value
-    );
-    value = twoInARowEvaluators.reduce(
-      (total, cb) => total + cb.call(self, PLAYER_O),
-      value
-    );
-    return value;
-  }
-
-  twoInARowValue(player: NON_NULL_MOVE): number {
-    let value = 0;
-    for (let i = 0; i < 3; i++) {
-      const row = i * 3;
-      if (
-        player == this.board[row] &&
-        this.board[row] == this.board[row + 1] &&
-        this.board[row + 2] == null
-      )
-        value++;
-
-      if (
-        player == this.board[row + 2] &&
-        this.board[row + 2] == this.board[row] &&
-        this.board[row + 1] == null
-      )
-        value++;
-
-      if (
-        player == this.board[row + 1] &&
-        this.board[row + 1] == this.board[row + 2] &&
-        this.board[row] == null
-      )
-        value++;
-    }
-
-    return player == PLAYER_X ? value : value * -1;
-  }
-
-  twoInAColumnValue(player: NON_NULL_MOVE) {
-    let value = 0;
-    for (let i = 0; i < 3; i++) {
-      let col = i;
-      if (
-        player == this.board[col] &&
-        this.board[col] == this.board[col + 3] &&
-        this.board[col + 6] == null
-      )
-        value++;
-
-      if (
-        player == this.board[col + 3] &&
-        this.board[col + 3] == this.board[col + 6] &&
-        this.board[col] == null
-      )
-        value++;
-
-      if (
-        player == this.board[col] &&
-        this.board[col] == this.board[col + 6] &&
-        this.board[col + 3] == null
-      )
-        value++;
-    }
-
-    return player == PLAYER_X ? value : value * -1;
-  }
-
-  twoInADiagonalValue(player: NON_NULL_MOVE) {
-    let value = 0;
-    if (
-      player == this.board[0] &&
-      this.board[0] == this.board[4] &&
-      this.board[8] == null
-    )
-      value++;
-
-    if (
-      player == this.board[0] &&
-      this.board[0] == this.board[8] &&
-      this.board[4] == null
-    )
-      value++;
-
-    if (
-      player == this.board[4] &&
-      this.board[4] == this.board[8] &&
-      this.board[0] == null
-    )
-      value++;
-
-    if (
-      player == this.board[2] &&
-      this.board[2] == this.board[4] &&
-      this.board[6] == null
-    )
-      value++;
-
-    if (
-      player == this.board[2] &&
-      this.board[2] == this.board[6] &&
-      this.board[4] == null
-    )
-      value++;
-
-    if (
-      player == this.board[4] &&
-      this.board[4] == this.board[6] &&
-      this.board[2] == null
-    )
-      value++;
-
-    return player == PLAYER_X ? value : value * -1;
-  }
-
-  getBoardValue(): number {
-    if (this.threeInARow(PLAYER_X)) return Game.MAX_BOARD_VALUE;
-    if (this.threeInARow(PLAYER_O)) return Game.MAX_BOARD_VALUE * -1;
-    return this.oneWayWinValue();
   }
 }
