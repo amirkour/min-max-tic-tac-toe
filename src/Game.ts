@@ -57,7 +57,7 @@ export default class Game {
 
   getNextMove(): number | null {
     if (this.winner) return null;
-    let next = this.nextMoveGetter.getNextMove(this.board);
+    let next = this.nextMoveGetter.getNextMove(this);
 
     return next;
   }

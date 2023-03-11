@@ -1,4 +1,4 @@
-import { MOVE } from "../utils";
+import Game from "..";
 export default interface INextMoveGetter {
-  getNextMove(board: MOVE[]): number;
+  getNextMove(game: Game): number;
 }

@@ -1,5 +1,6 @@
 import INextMoveGetter from "./INextMoveGetter";
 import { MOVE } from "../utils";
+import Game from "..";
 
 interface ConstructorProps {
   min?: number;
@@ -55,8 +56,9 @@ export default class RandomNextMoveGetter implements INextMoveGetter {
    * the passed-in board
    * @throws if no move could be generated in MAX_TIMES_TO_GENERATE_MOVE attempts
    */
-  getNextMove(board: MOVE[]): number {
-    let i = 0;
+  getNextMove(game: Game): number {
+    let i = 0,
+      board = game.getBoard();
     let randomMove = this.generateRandomMove();
     for (; i < MAX_TIMES_TO_GENERATE_MOVE && board[randomMove]; i++)
       randomMove = this.generateRandomMove();
