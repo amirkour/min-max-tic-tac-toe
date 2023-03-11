@@ -6,9 +6,9 @@ import { threeInARow } from "../utils";
 export default class MinMaxNextMoveGetter implements INextMoveGetter {
   static MAX_BOARD_VALUE = 100;
   protected maxPly: number;
-  static DEFAULT_PAX_PLY = 2;
+  static DEFAULT_MAX_PLY = 2;
   constructor({ maxPly }: { maxPly?: number } = {}) {
-    this.maxPly = maxPly || MinMaxNextMoveGetter.DEFAULT_PAX_PLY;
+    this.maxPly = maxPly || MinMaxNextMoveGetter.DEFAULT_MAX_PLY;
   }
   getNextMove(game: Game): number {
     const whosTurn = game.whosTurn();
@@ -17,9 +17,10 @@ export default class MinMaxNextMoveGetter implements INextMoveGetter {
 
     console.log(`min-max algorithm starting for player ${whosTurn}`);
     const { value, move } = this.recursiveMinMax(
-      game,
+      game.getBoard(),
       this.maxPly,
       0,
+      whosTurn,
       whosTurn == PLAYER_X
     );
 
@@ -40,27 +41,62 @@ export default class MinMaxNextMoveGetter implements INextMoveGetter {
 
   getAvailableMoves(board: MOVE[]): number[] {
     const moves: number[] = [];
-    board.forEach((move, i) => {
-      if (move == null) moves.push(i);
-    });
+    for (let i = 0; i < board.length; i++) {
+      if (board[i] == null) moves.push(i);
+    }
+
     return moves;
   }
 
   recursiveMinMax(
-    game: Game,
+    board: MOVE[],
     maxPly: number,
     curPly: number,
+    nextPlayerToMove: NON_NULL_MOVE,
     maximize: boolean
   ): { value: number; move: number | null } {
-    const board = game.getBoard();
+    console.log(
+      `recursive: board: ${board}, max: ${maxPly}, cur: ${curPly}, next player ${nextPlayerToMove}, maximize: ${maximize}`
+    );
     if (curPly >= maxPly)
       return { move: null, value: this.evaluateBoardValue(board) };
 
-    const remainingMoves = this.getAvailableMoves(game.getBoard());
+    const remainingMoves = this.getAvailableMoves(board);
+    console.log(`remaining moves!? ${remainingMoves}`);
     if (remainingMoves.length <= 0)
       return { move: null, value: this.evaluateBoardValue(board) };
 
-    return { value: 1, move: 2 };
+    const uninitialized = MinMaxNextMoveGetter.MAX_BOARD_VALUE + 5;
+    let value = uninitialized,
+      move: number | null = null;
+    for (let i = 0; i < remainingMoves.length; i++) {
+      const nextMove = remainingMoves[i];
+
+      board[nextMove] = nextPlayerToMove;
+      const { value: nextValue } = this.recursiveMinMax(
+        board,
+        maxPly,
+        curPly + 0.5,
+        nextPlayerToMove == PLAYER_X ? PLAYER_O : PLAYER_X,
+        maximize
+      );
+      if (maximize) {
+        if (value == uninitialized || value < nextValue) {
+          value = nextValue;
+          move = nextMove;
+        }
+        if (value === MinMaxNextMoveGetter.MAX_BOARD_VALUE) break;
+      } else {
+        if (value == uninitialized || value > nextValue) {
+          value = nextValue;
+          move = nextMove;
+        }
+        if (value === -1 * MinMaxNextMoveGetter.MAX_BOARD_VALUE) break;
+      }
+      board[nextMove] = null;
+    }
+
+    return { value, move };
   }
 
   twoInARowValue(board: MOVE[], player: NON_NULL_MOVE): number {
@@ -159,11 +195,13 @@ export default class MinMaxNextMoveGetter implements INextMoveGetter {
     let value = 0,
       self = this;
     value = twoInARowEvaluators.reduce(
-      (runningTotal, evaluator) => runningTotal + evaluator.call(self, board, PLAYER_X),
+      (runningTotal, evaluator) =>
+        runningTotal + evaluator.call(self, board, PLAYER_X),
       value
     );
     value = twoInARowEvaluators.reduce(
-      (runningTotal, evaluator) => runningTotal + evaluator.call(self, board, PLAYER_O),
+      (runningTotal, evaluator) =>
+        runningTotal + evaluator.call(self, board, PLAYER_O),
       value
     );
     return value;
