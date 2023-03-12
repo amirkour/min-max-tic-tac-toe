@@ -1,6 +1,6 @@
-import Game, { strategies } from "./src";
+import Game, { strategies } from ".";
 const { MinMaxNextMoveGetter } = strategies;
-import { debugging, MOVE } from "./src/utils";
+import { debugging, MOVE } from "./utils";
 import readline from "readline";
 
 const rl = readline.createInterface({
@@ -38,10 +38,6 @@ function doStuff(move: number) {
   }
 }
 
-console.log(`debug mode: ${debugging === true}`);
-const game = new Game({ nmg: new MinMaxNextMoveGetter({ maxPly: 2 }) });
-prompt();
-
 function prompt() {
   printBoard(game.getBoard());
   console.log(`enter a move: `);
@@ -69,3 +65,7 @@ rl.once("close", () => {
   // end of input
   console.log(`end of input`);
 });
+
+console.log(`debug mode: ${debugging === true}`);
+const game = new Game({ nmg: new MinMaxNextMoveGetter({ maxPly: 2 }) });
+prompt();

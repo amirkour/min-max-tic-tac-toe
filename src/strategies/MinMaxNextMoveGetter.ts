@@ -11,9 +11,12 @@ export default class MinMaxNextMoveGetter implements INextMoveGetter {
     this.maxPly = maxPly || MinMaxNextMoveGetter.DEFAULT_MAX_PLY;
   }
 
-  private debug(str: string) {
-    if (debugging) console.log(str);
-    return this;
+  private debug(str: string, ply: number = 0) {
+    if (!debugging) return;
+
+    let spaces = "";
+    for (let i = 0; i < ply; i += 0.5) spaces = `${spaces} `;
+    console.log(`${spaces}${str}`);
   }
 
   getNextMove(game: Game): number {
@@ -68,26 +71,30 @@ export default class MinMaxNextMoveGetter implements INextMoveGetter {
         curPly,
         nextPlayerToMove,
         maximize,
-      })}`
+      })}`,
+      curPly
     );
 
     if (threeInARow(board, PLAYER_X) || threeInARow(board, PLAYER_O)) {
       const boardValue = this.evaluateBoardValue(board);
-      this.debug(`three in a row detected - returning value ${boardValue}`);
+      this.debug(
+        `three in a row detected - returning value ${boardValue}`,
+        curPly
+      );
       return { move: null, value: boardValue };
     }
 
     if (curPly >= maxPly) {
       const boardValue = this.evaluateBoardValue(board);
-      this.debug(`curPly >= maxPly - value is ${boardValue}`);
+      this.debug(`curPly >= maxPly - value is ${boardValue}`, curPly);
       return { move: null, value: boardValue };
     }
 
     const remainingMoves = this.getAvailableMoves(board);
-    this.debug(`remaining moves: ${remainingMoves}`);
+    this.debug(`remaining moves: ${remainingMoves}`, curPly);
     if (remainingMoves.length <= 0) {
       const boardValue = this.evaluateBoardValue(board);
-      this.debug(`no moves left - value is ${boardValue}`);
+      this.debug(`no moves left - value is ${boardValue}`, curPly);
       return { move: null, value: boardValue };
     }
 
@@ -95,7 +102,7 @@ export default class MinMaxNextMoveGetter implements INextMoveGetter {
       move: number | null = null;
     for (let i = 0; i < remainingMoves.length; i++) {
       const nextMove = remainingMoves[i];
-      this.debug(`making move: ${nextPlayerToMove} takes ${nextMove}`);
+      this.debug(`making move: ${nextPlayerToMove} takes ${nextMove}`, curPly);
 
       board[nextMove] = nextPlayerToMove;
       const { value: nextValue } = this.recursiveMinMax(
@@ -107,18 +114,18 @@ export default class MinMaxNextMoveGetter implements INextMoveGetter {
       );
 
       if (nextValue == null) {
-        this.debug(`got a null nextValue from recursive call ... 🤔`);
+        this.debug(`got a null nextValue from recursive call ... 🤔`, curPly);
         board[nextMove] = null;
         continue;
       }
 
       if (maximize) {
-        if (value == null || value < nextValue) {
+        if (value == null || nextValue > value) {
           value = nextValue;
           move = nextMove;
         }
       } else {
-        if (value == null || value > nextValue) {
+        if (value == null || nextValue < value) {
           value = nextValue;
           move = nextMove;
         }
