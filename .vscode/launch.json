@@ -14,7 +14,7 @@
       "outFiles": ["${workspaceFolder}/dist/**/*.js"],
       "console": "integratedTerminal",
       "env": {
-        // "NODE_DEBUGGING": "true"
+        // "NODE_ENV": "development"
       }
     }
   ]

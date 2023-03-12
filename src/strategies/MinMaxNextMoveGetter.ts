@@ -1,7 +1,7 @@
 import { MOVE, NON_NULL_MOVE, PLAYER_O, PLAYER_X } from "../utils";
 import INextMoveGetter from "./INextMoveGetter";
 import Game from "..";
-import { threeInARow, debugging } from "../utils";
+import { threeInARow, isDev } from "../utils";
 
 export default class MinMaxNextMoveGetter implements INextMoveGetter {
   static MAX_BOARD_VALUE = 100;
@@ -12,7 +12,7 @@ export default class MinMaxNextMoveGetter implements INextMoveGetter {
   }
 
   private debug(str: string, ply: number = 0) {
-    if (!debugging) return;
+    if (!isDev()) return;
 
     let spaces = "";
     for (let i = 0; i < ply; i += 0.5) spaces = `${spaces} `;
